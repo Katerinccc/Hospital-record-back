@@ -28,15 +28,20 @@ public class SpecialityService implements ISpecialityInterface {
 
     @Override
     @Transactional
-    public Speciality updateSpeciality(int idSpeciality, Speciality speciality) {
-        speciality.setIdSpeciality(idSpeciality);
+    public Speciality updateSpeciality(Integer id, Speciality speciality) {
+        speciality.setIdSpeciality(id);
         return specialityRepository.save(speciality);
     }
 
     @Override
     @Transactional
-    public void deleteSpeciality(int idSpeciality) {
+    public Speciality deleteSpeciality(Integer idSpeciality) {
         var speciality = specialityRepository.findById(idSpeciality);
-        speciality.ifPresent(value -> specialityRepository.delete(value));
+        if (speciality.isPresent()){
+            specialityRepository.delete(speciality.get());
+            return speciality.get();
+        }else {
+            return null;
+        }
     }
 }

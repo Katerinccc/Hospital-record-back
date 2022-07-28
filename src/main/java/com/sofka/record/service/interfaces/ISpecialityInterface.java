@@ -7,7 +7,7 @@ public interface ISpecialityInterface {
 
     List<Speciality> getSpecialities();
     Speciality createSpeciality(Speciality speciality);
-    Speciality updateSpeciality(int idSpeciality, Speciality speciality);
-    void deleteSpeciality(int idSpeciality);
+    Speciality updateSpeciality(Integer idSpeciality, Speciality speciality);
+    Speciality deleteSpeciality(Integer idSpeciality);
 
 }
