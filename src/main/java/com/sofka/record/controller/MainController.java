@@ -3,8 +3,10 @@ package com.sofka.record.controller;
 import com.sofka.record.utility.Response;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import java.sql.SQLException;
 
+@Controller
 public class MainController {
 
     private Response response = new Response();
@@ -16,14 +18,14 @@ public class MainController {
         response.data = exception.getCause();
         httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     }
-    
+
     protected void getErrorMessageForResponse(DataAccessException dataException) {
         response.error = true;
         if(dataException.getRootCause() instanceof SQLException sqlEx) {
             var sqlErrorCode = sqlEx.getErrorCode();
             switch (sqlErrorCode) {
                 case 1062 -> response.message = "The data is registered already.";
-                case 1452 -> response.message = "The indicated user does not exist.";
+                case 1452 -> response.message = "The indicated speciality/patient does not exist.";
                 default -> {
                     response.message = dataException.getMessage();
                     response.data = dataException.getCause();

@@ -1,4 +1,8 @@
 package com.sofka.record.service.interfaces;
 
-public interface PatientInterface {
+public interface IPatientInterface {
+
+
+
+
 }
