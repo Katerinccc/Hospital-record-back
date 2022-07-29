@@ -6,6 +6,9 @@ import java.util.List;
 public interface ISpecialityInterface {
 
     List<Speciality> getSpecialities();
+
+    Speciality getSpeciality(Integer id);
+
     Speciality createSpeciality(Speciality speciality);
     Speciality updateSpeciality(Integer idSpeciality, Speciality speciality);
     Speciality deleteSpeciality(Integer idSpeciality);

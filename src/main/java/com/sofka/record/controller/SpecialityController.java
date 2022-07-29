@@ -1,5 +1,6 @@
 package com.sofka.record.controller;
 
+import com.sofka.record.controller.dto.ResponseExceptionDTO;
 import com.sofka.record.controller.dto.SpecialityDTO;
 import com.sofka.record.domain.Speciality;
 import com.sofka.record.service.SpecialityService;
@@ -17,21 +18,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/speciality")
-@CrossOrigin(origins = "http://127.0.0.1:5500",
-        methods = {
-                RequestMethod.GET,
-                RequestMethod.POST,
-                RequestMethod.DELETE,
-                RequestMethod.PUT,
-                RequestMethod.PATCH
-        })
+@CrossOrigin(origins = "*")
 public class SpecialityController {
 
     @Autowired
@@ -60,7 +54,28 @@ public class SpecialityController {
                     .toList();
             httpStatus = HttpStatus.OK;
         }catch (Exception exception) {
-            mainController.getErrorMessageInternal(exception);
+            ResponseExceptionDTO responseExceptionDTO = mainController.getErrorMessageInternal(exception);
+            response = responseExceptionDTO.getResponse();
+            httpStatus = responseExceptionDTO.getHttpStatus();
+        }
+
+        return new ResponseEntity(response, httpStatus);
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Response> getSpeciality(@PathVariable(value = "id") Integer id){
+        response.restart();
+        try {
+            Speciality speciality = specialityService.getSpeciality(id);
+
+            response.data = new SpecialityDTO(speciality.getIdSpeciality(),
+                    speciality.getName(),
+                    speciality.getPhysician());
+            httpStatus = HttpStatus.OK;
+        }catch (Exception exception) {
+            ResponseExceptionDTO responseExceptionDTO = mainController.getErrorMessageInternal(exception);
+            response = responseExceptionDTO.getResponse();
+            httpStatus = responseExceptionDTO.getHttpStatus();
         }
         return new ResponseEntity(response, httpStatus);
     }
@@ -75,13 +90,17 @@ public class SpecialityController {
             Speciality speciality = specialityService.createSpeciality(specialityRequest);
 
             response.data = new SpecialityDTO(speciality.getIdSpeciality(),
-                            specialityDto.getName(),
-                            specialityRequest.getPhysician());
+                            speciality.getName(),
+                            speciality.getPhysician());
             httpStatus = HttpStatus.OK;
         }catch (DataAccessException dataAccessException){
-            mainController.getErrorMessageForResponse(dataAccessException);
+            ResponseExceptionDTO responseExceptionDTO = mainController.getErrorMessageForResponse(dataAccessException);
+            response = responseExceptionDTO.getResponse();
+            httpStatus = responseExceptionDTO.getHttpStatus();
         }catch (Exception exception) {
-            mainController.getErrorMessageInternal(exception);
+            ResponseExceptionDTO responseExceptionDTO = mainController.getErrorMessageInternal(exception);
+            response = responseExceptionDTO.getResponse();
+            httpStatus = responseExceptionDTO.getHttpStatus();
         }
         return new ResponseEntity(response, httpStatus);
     }
@@ -104,15 +123,19 @@ public class SpecialityController {
                     specialityRequest.getPhysician());
             httpStatus = HttpStatus.OK;
         }catch (DataAccessException dataAccessException){
-            mainController.getErrorMessageForResponse(dataAccessException);
+            ResponseExceptionDTO responseExceptionDTO = mainController.getErrorMessageForResponse(dataAccessException);
+            response = responseExceptionDTO.getResponse();
+            httpStatus = responseExceptionDTO.getHttpStatus();
         }catch (Exception exception) {
-            mainController.getErrorMessageInternal(exception);
+            ResponseExceptionDTO responseExceptionDTO = mainController.getErrorMessageInternal(exception);
+            response = responseExceptionDTO.getResponse();
+            httpStatus = responseExceptionDTO.getHttpStatus();
         }
         return new ResponseEntity(response, httpStatus);
     }
 
     @DeleteMapping(path="/{id}")
-    public ResponseEntity<Response> deleteSpeciality(@PathVariable(value = "id") Integer id){
+    public ResponseEntity<Response> deleteSpeciality(@PathVariable(value = "id") Integer id) throws SQLException {
         response.restart();
         try {
             response.data = specialityService.deleteSpeciality(id);
@@ -125,12 +148,15 @@ public class SpecialityController {
                 response.message = "Speciality deleted successfully.";
                 httpStatus = HttpStatus.OK;
             }
-        } catch (DataAccessException exception) {
-            mainController.getErrorMessageForResponse(exception);
-        } catch (Exception exception) {
-            mainController.getErrorMessageInternal(exception);
+        } catch (DataAccessException dataAccessException) {
+            ResponseExceptionDTO responseExceptionDTO = mainController.getErrorMessageForResponse(dataAccessException);
+            response = responseExceptionDTO.getResponse();
+            httpStatus = responseExceptionDTO.getHttpStatus();
+        }catch (Exception exception) {
+            ResponseExceptionDTO responseExceptionDTO = mainController.getErrorMessageInternal(exception);
+            response = responseExceptionDTO.getResponse();
+            httpStatus = responseExceptionDTO.getHttpStatus();
         }
         return new ResponseEntity(response, httpStatus);
     }
-
 }
