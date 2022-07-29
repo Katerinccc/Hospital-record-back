@@ -1,5 +1,7 @@
 package com.sofka.record.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +27,7 @@ public class Patient {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_speciality", nullable = false)
+    @JsonBackReference
     private Speciality speciality;
 
     @Column(name = "name", nullable = false, length = 45)
@@ -40,7 +43,12 @@ public class Patient {
     private Long numberAppointments;
 
     @OneToMany(mappedBy = "patient")
+    @JsonManagedReference
     private List<Appointment> appointments = new ArrayList<>();
+
+    public void increaseAppointmentNumber(){
+        this.numberAppointments++;
+    }
 
 
 }

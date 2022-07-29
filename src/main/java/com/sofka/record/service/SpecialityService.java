@@ -21,6 +21,7 @@ public class SpecialityService implements ISpecialityInterface {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Speciality getSpeciality(Integer id) {
         var speciality = specialityRepository.findById(id);
         return speciality.orElse(null);

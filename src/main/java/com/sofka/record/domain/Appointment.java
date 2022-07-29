@@ -1,8 +1,10 @@
 package com.sofka.record.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,9 +29,18 @@ public class Appointment {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "id_patient", nullable = false)
+    @JsonBackReference
     private Patient patient;
 
     @Column(name = "date", nullable = false)
     private Instant date;
 
+    public Appointment(Patient patient, Instant date) {
+        this.patient = patient;
+        this.date = date;
+    }
+
+    public Appointment() {
+
+    }
 }

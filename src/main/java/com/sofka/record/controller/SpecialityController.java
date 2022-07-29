@@ -5,7 +5,6 @@ import com.sofka.record.controller.dto.SpecialityDTO;
 import com.sofka.record.domain.Speciality;
 import com.sofka.record.service.SpecialityService;
 import com.sofka.record.utility.Response;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -33,9 +31,6 @@ public class SpecialityController {
 
     @Autowired
     private MainController mainController;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     private Response response = new Response();
     private HttpStatus httpStatus = HttpStatus.OK;
@@ -50,7 +45,8 @@ public class SpecialityController {
                     .stream()
                     .map(speciality ->
                             new SpecialityDTO(speciality.getIdSpeciality(),
-                                    speciality.getName(), speciality.getPhysician()))
+                                    speciality.getName(), speciality.getPhysician(),
+                                    speciality.getPatients()))
                     .toList();
             httpStatus = HttpStatus.OK;
         }catch (Exception exception) {
@@ -91,8 +87,9 @@ public class SpecialityController {
 
             response.data = new SpecialityDTO(speciality.getIdSpeciality(),
                             speciality.getName(),
-                            speciality.getPhysician());
-            httpStatus = HttpStatus.OK;
+                            speciality.getPhysician(),
+                            speciality.getPatients());
+            httpStatus = HttpStatus.CREATED;
         }catch (DataAccessException dataAccessException){
             ResponseExceptionDTO responseExceptionDTO = mainController.getErrorMessageForResponse(dataAccessException);
             response = responseExceptionDTO.getResponse();
@@ -135,7 +132,7 @@ public class SpecialityController {
     }
 
     @DeleteMapping(path="/{id}")
-    public ResponseEntity<Response> deleteSpeciality(@PathVariable(value = "id") Integer id) throws SQLException {
+    public ResponseEntity<Response> deleteSpeciality(@PathVariable(value = "id") Integer id) {
         response.restart();
         try {
             response.data = specialityService.deleteSpeciality(id);

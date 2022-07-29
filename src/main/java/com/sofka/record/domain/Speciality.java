@@ -1,6 +1,8 @@
 package com.sofka.record.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,6 +30,7 @@ public class Speciality {
     private String physician;
 
     @OneToMany(mappedBy = "speciality")
+    @JsonManagedReference
     private List<Patient> patients = new ArrayList<>();
 
 }
