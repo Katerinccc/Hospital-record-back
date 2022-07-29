@@ -1,6 +1,7 @@
 package com.sofka.record.controller;
 
 import com.sofka.record.controller.dto.ResponseExceptionDTO;
+import com.sofka.record.utility.BusinessException;
 import com.sofka.record.utility.Response;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,17 @@ public class MainController {
             response.data = dataException.getCause();
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
+
+        return new ResponseExceptionDTO(response,httpStatus);
+    }
+
+    protected ResponseExceptionDTO getErrorBusinessException(BusinessException businessException) {
+        Response response = new Response();
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+
+        response.error = true;
+        response.message = businessException.getMessage();
+        response.data = businessException.getCause();
 
         return new ResponseExceptionDTO(response,httpStatus);
     }

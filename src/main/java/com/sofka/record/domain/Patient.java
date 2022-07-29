@@ -2,7 +2,10 @@ package com.sofka.record.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.sofka.record.utility.BusinessException;
+import com.sofka.record.utility.Util;
 import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -46,8 +49,33 @@ public class Patient {
     @JsonManagedReference
     private List<Appointment> appointments = new ArrayList<>();
 
+    public Patient() {
+
+    }
+
+    public Patient(Speciality speciality, String name, Long identification, Integer age) throws BusinessException {
+        this.speciality = speciality;
+        this.name = validateName(name);
+        this.identification = identification;
+        this.age = validateAge(age);
+    }
+
     public void increaseAppointmentNumber(){
         this.numberAppointments++;
+    }
+
+    private String validateName(String name) throws BusinessException{
+        if(Util.validateLength(name,10,45)){
+            return name;
+        }
+        throw new BusinessException("Invalid patient name.");
+    }
+
+    private Integer validateAge(Integer age) throws BusinessException{
+        if(age > 0){
+            return age;
+        }
+        throw new BusinessException("Invalid patient age.");
     }
 
 

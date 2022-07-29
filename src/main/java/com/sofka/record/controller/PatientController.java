@@ -1,9 +1,12 @@
 package com.sofka.record.controller;
 
+import com.sofka.record.controller.dto.IdPatientDTO;
 import com.sofka.record.controller.dto.PatientDTO;
 import com.sofka.record.controller.dto.ResponseExceptionDTO;
 import com.sofka.record.domain.Patient;
+import com.sofka.record.domain.Speciality;
 import com.sofka.record.service.PatientService;
+import com.sofka.record.utility.BusinessException;
 import com.sofka.record.utility.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -32,7 +35,7 @@ public class PatientController{
         private Response response = new Response();
         private HttpStatus httpStatus = HttpStatus.OK;
 
-        @GetMapping(path = "/validate/{idSpeciality}/{identification}")
+        @GetMapping(path = "/{idSpeciality}/{identification}")
         public ResponseEntity<Response> getExistentPatient(@PathVariable(value = "idSpeciality") Integer idSpeciality,
                                                         @PathVariable(value = "identification") Long identification){
                 response.restart();
@@ -60,15 +63,13 @@ public class PatientController{
         public ResponseEntity<Response> createPatient(@RequestBody PatientDTO patientDTO){
                 response.restart();
                 try {
-                        Patient patientRequest = new Patient();
-                        patientRequest.setSpeciality(patientDTO.getSpeciality());
-                        patientRequest.setName(patientDTO.getName());
-                        patientRequest.setIdentification(patientDTO.getIdentification());
-                        patientRequest.setAge(patientDTO.getAge());
+                        Patient patientRequest = new Patient(new Speciality(patientDTO.getIdSpeciality()),patientDTO.getName(),
+                                patientDTO.getIdentification(),patientDTO.getAge());
+
                         Patient patient = patientService.createPatient(patientRequest);
 
                         response.data = new PatientDTO(patient.getIdPatient(),
-                                patient.getSpeciality(),
+                                patient.getSpeciality().getIdSpeciality(),
                                 patient.getName(),
                                 patient.getIdentification(),
                                 patient.getAge(),
@@ -77,6 +78,10 @@ public class PatientController{
                 }catch (DataAccessException dataAccessException){
                         ResponseExceptionDTO responseExceptionDTO =
                                 mainController.getErrorMessageForResponse(dataAccessException);
+                        response = responseExceptionDTO.getResponse();
+                        httpStatus = responseExceptionDTO.getHttpStatus();
+                }catch (BusinessException businessException){
+                        ResponseExceptionDTO responseExceptionDTO = mainController.getErrorBusinessException(businessException);
                         response = responseExceptionDTO.getResponse();
                         httpStatus = responseExceptionDTO.getHttpStatus();
                 }catch (Exception exception) {
@@ -88,10 +93,10 @@ public class PatientController{
         }
 
         @PostMapping(path = "/appointment")
-        public ResponseEntity<Response> addNewAppointment(@RequestBody Integer idPatient){
+        public ResponseEntity<Response> addNewAppointment(@RequestBody IdPatientDTO idPatientDTO){
                 response.restart();
                 try {
-                        Integer idAppointment = patientService.addNewAppointment(idPatient);
+                        Integer idAppointment = patientService.addNewAppointment(idPatientDTO.getIdPatient());
 
                         if (idAppointment == null) {
                                 response.data = false;

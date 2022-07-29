@@ -5,6 +5,7 @@ import com.sofka.record.domain.Patient;
 import com.sofka.record.repository.AppointmentRepository;
 import com.sofka.record.repository.PatientRepository;
 import com.sofka.record.service.interfaces.IPatientInterface;
+import com.sofka.record.utility.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,12 @@ public class PatientService implements IPatientInterface {
 
     @Override
     @Transactional
-    public Patient createPatient(Patient patient) {
+    public Patient createPatient(Patient patient) throws BusinessException{
+
+        if(getPatient(patient.getSpeciality().getIdSpeciality(), patient.getIdentification()) != null){
+            throw new BusinessException("Patient already register.");
+        }
+
         patient.setNumberAppointments(1L);
         Patient newPatient = patientRepository.save(patient);
         addNewAppointment(newPatient.getIdPatient());

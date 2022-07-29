@@ -1,7 +1,7 @@
 package com.sofka.record.controller.dto;
 
-import com.sofka.record.domain.Patient;
 import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +13,9 @@ public class SpecialityDTO {
 
     private String physician;
 
-    private List<Patient> patients = new ArrayList<>();
+    private List<PatientDTO> patients = new ArrayList<>();
 
-    public SpecialityDTO(Integer idSpeciality, String name, String physician, List<Patient> patients) {
+    public SpecialityDTO(Integer idSpeciality, String name, String physician, List<PatientDTO> patients) {
         this.idSpeciality = idSpeciality;
         this.name = name;
         this.physician = physician;
@@ -27,4 +27,5 @@ public class SpecialityDTO {
         this.name = name;
         this.physician = physician;
     }
+
 }
