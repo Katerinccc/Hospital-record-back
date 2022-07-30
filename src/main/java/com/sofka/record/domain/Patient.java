@@ -28,7 +28,7 @@ public class Patient {
     @Column(name = "id_patient", nullable = false)
     private Integer idPatient;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_speciality", nullable = false)
     @JsonBackReference
     private Speciality speciality;

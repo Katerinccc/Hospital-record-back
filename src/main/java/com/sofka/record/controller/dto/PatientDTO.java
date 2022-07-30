@@ -26,4 +26,7 @@ public class PatientDTO {
         this.age = age;
         this.numberAppointments = numberAppointments;
     }
+
+    public PatientDTO() {
+    }
 }

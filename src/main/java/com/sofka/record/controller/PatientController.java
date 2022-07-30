@@ -2,6 +2,7 @@ package com.sofka.record.controller;
 
 import com.sofka.record.controller.dto.IdPatientDTO;
 import com.sofka.record.controller.dto.PatientDTO;
+import com.sofka.record.controller.dto.PatientResponseDTO;
 import com.sofka.record.controller.dto.ResponseExceptionDTO;
 import com.sofka.record.domain.Patient;
 import com.sofka.record.domain.Speciality;
@@ -70,12 +71,13 @@ public class PatientController{
                         response.data = patients
                                 .stream()
                                 .map(patient ->
-                                        new PatientDTO(patient.getIdPatient(),
+                                        new PatientResponseDTO(patient.getIdPatient(),
                                                 patient.getSpeciality().getIdSpeciality(),
                                                 patient.getName(),
                                                 patient.getIdentification(),
                                                 patient.getAge(),
-                                                patient.getNumberAppointments()))
+                                                patient.getNumberAppointments(),
+                                                patient.getSpeciality().getName()))
                                 .toList();
                         httpStatus = HttpStatus.OK;
                 }catch (Exception exception) {

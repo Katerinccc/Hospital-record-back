@@ -15,6 +15,4 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
                      nativeQuery = true)
     Integer validatePatientExist(@Param(value = "idSpeciality") Integer idSpeciality,
                            @Param(value = "identification") Long identification);
-
-
 }
