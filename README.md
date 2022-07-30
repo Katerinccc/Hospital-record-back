@@ -22,13 +22,21 @@ spring.datasource.password = ####  // (Update your password)
 4. ▶️ Run the application on the file **HospitalRecordApplication.java**
 5. Download the [frontend](https://github.com/Katerinccc/Hospital-record-front) of the application from GitHub.
 6. Open the project with Visual Studio Code.
-7. Go to the file index.html and select **Open with Live Server** (
+7. Run the next commando to install the dependencies of the project:
+```sh
+npm install
+```
+8. Run the next command to transpile the code from TS to JS.
+```sh
+npx tsc
+```
+9. Finally, go to the file index.html and select **Open with Live Server** (
 if you don't have the extension you can download it [here](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) )
-8. The Application will open in the browser on the URL: 
+10. The Application will open in the browser on the URL: 
 ```sh
 http://127.0.0.1:5500/index.html
 ```
-9. Now you can test the APP.
+11. Now you can test the APP.
 
 
 
