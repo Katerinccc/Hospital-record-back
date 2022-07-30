@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class PatientService implements IPatientInterface {
@@ -27,6 +28,11 @@ public class PatientService implements IPatientInterface {
     }
 
     @Override
+    public List<Patient> getPatientsList() {
+        return patientRepository.findAll();
+    }
+
+    @Override
     @Transactional
     public Patient createPatient(Patient patient) throws BusinessException{
 
@@ -34,7 +40,7 @@ public class PatientService implements IPatientInterface {
             throw new BusinessException("Patient already register.");
         }
 
-        patient.setNumberAppointments(1L);
+        patient.setNumberAppointments(0L);
         Patient newPatient = patientRepository.save(patient);
         addNewAppointment(newPatient.getIdPatient());
         return newPatient;
@@ -68,4 +74,5 @@ public class PatientService implements IPatientInterface {
             return null;
         }
     }
+
 }

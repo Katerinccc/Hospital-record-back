@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/patient")
 @CrossOrigin(origins = "*")
@@ -59,6 +61,31 @@ public class PatientController{
                 return new ResponseEntity(response, httpStatus);
         }
 
+        @GetMapping(path = "/list")
+        public ResponseEntity<Response> getPatientList(){
+                response.restart();
+                try {
+                        List<Patient> patients = patientService.getPatientsList();
+
+                        response.data = patients
+                                .stream()
+                                .map(patient ->
+                                        new PatientDTO(patient.getIdPatient(),
+                                                patient.getSpeciality().getIdSpeciality(),
+                                                patient.getName(),
+                                                patient.getIdentification(),
+                                                patient.getAge(),
+                                                patient.getNumberAppointments()))
+                                .toList();
+                        httpStatus = HttpStatus.OK;
+                }catch (Exception exception) {
+                        ResponseExceptionDTO responseExceptionDTO = mainController.getErrorMessageInternal(exception);
+                        response = responseExceptionDTO.getResponse();
+                        httpStatus = responseExceptionDTO.getHttpStatus();
+                }
+                return new ResponseEntity(response, httpStatus);
+        }
+
         @PostMapping
         public ResponseEntity<Response> createPatient(@RequestBody PatientDTO patientDTO){
                 response.restart();
@@ -74,7 +101,7 @@ public class PatientController{
                                 patient.getIdentification(),
                                 patient.getAge(),
                                 patient.getNumberAppointments());
-                        httpStatus = HttpStatus.OK;
+                        httpStatus = HttpStatus.CREATED;
                 }catch (DataAccessException dataAccessException){
                         ResponseExceptionDTO responseExceptionDTO =
                                 mainController.getErrorMessageForResponse(dataAccessException);

@@ -2,6 +2,7 @@ package com.sofka.record.service.interfaces;
 
 import com.sofka.record.domain.Patient;
 import com.sofka.record.utility.BusinessException;
+import java.util.List;
 
 public interface IPatientInterface {
 
@@ -12,6 +13,8 @@ public interface IPatientInterface {
     Integer addNewAppointment(Integer idPatient);
 
     Patient deletePatient(Integer idPatient);
+
+    List<Patient> getPatientsList();
 
 
 }
